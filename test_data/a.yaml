@@ -1,0 +1,6 @@
+config:
+  prefix: test_omer
+vars:
+  a:
+    test1: "test value 1"
+    test_arr: ["test1", "test2"]
