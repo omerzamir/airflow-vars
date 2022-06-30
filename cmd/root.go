@@ -50,10 +50,6 @@ airflow vars is a cli intends to help you throughout your airflow deployment pro
 It'll help you manage your airflow variables with yaml files and deploy all of your variables directly to airflow.
 	`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		if username == "" {
-			cobra.CheckErr(fmt.Errorf("%s is missing", userNameFlag))
-		}
-
 		promptPassword, err := cmd.Flags().GetBool(promptPasswordFlag)
 		cobra.CheckErr(err)
 
@@ -89,9 +85,13 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.airflow-vars.yaml)")
 	rootCmd.PersistentFlags().String(hostFlag, "localhost:8080", "your airflow host")
 	rootCmd.PersistentFlags().String(schemeFlag, "https", "your airflow scheme")
+
 	rootCmd.PersistentFlags().StringVar(&username, userNameFlag, "", "Username to authenticate airflow")
+	rootCmd.MarkFlagRequired(userNameFlag)
+
 	rootCmd.PersistentFlags().StringVar(&password, passwordFlag, "", "Password to authenticate airflow")
 	rootCmd.PersistentFlags().Bool(promptPasswordFlag, false, "Interactive prompt for authentication password")
+	rootCmd.MarkFlagsMutuallyExclusive(passwordFlag, promptPasswordFlag)
 }
 
 // initConfig reads in config file and ENV variables if set.
