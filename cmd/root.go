@@ -87,7 +87,7 @@ func init() {
 	rootCmd.PersistentFlags().String(schemeFlag, "https", "your airflow scheme")
 
 	rootCmd.PersistentFlags().StringVar(&username, userNameFlag, "", "Username to authenticate airflow")
-	rootCmd.MarkPersistentFlagRequired(userNameFlag)
+	cobra.CheckErr(rootCmd.MarkPersistentFlagRequired(userNameFlag))
 
 	rootCmd.PersistentFlags().StringVar(&password, passwordFlag, "", "Password to authenticate airflow")
 	rootCmd.PersistentFlags().Bool(promptPasswordFlag, false, "Interactive prompt for authentication password")
