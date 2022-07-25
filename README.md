@@ -12,11 +12,11 @@ There are 2 options in order to install the cli.
  2. Install from binary release.
 
 ### Install with go
-Install the airflow vars with the command `go install github.com/LushaTeam/airflow-vars@latest`. 
+Install the airflow vars with the command `go install github.com/omerzamir/airflow-vars@latest`. 
 Go will automatically install it in your `$GOPATH/bin` directory which should be in your $PATH. 
 
 ### Install from binary release
-1. Download your [desired version](https://github.com/LushaTeam/airflow-vars/releases)
+1. Download your [desired version](https://github.com/omerzamir/airflow-vars/releases)
 2. Unpack it (tar -zxvf airflow-vars_0.0.1_Linux_arm64.tar.gz)
 3. Find the `airflow-vars` binary in the unpacked directory, and move it to its desired destination (`mv airflow-vars_0.0.1_Linux_arm64/airflow-vars /usr/local/bin/airflow-vars`)
 
@@ -53,4 +53,4 @@ If any variables with prefix of example exists in the cluster, `airflow-vars` wi
 
 ## License
 
-Airflow-Vars is released under the Apache 2.0 license. See [LICENSE.txt](https://github.com/LushaTeam/airflow-vars/blob/master/LICENSE)
+Airflow-Vars is released under the Apache 2.0 license. See [LICENSE](https://github.com/omerzamir/airflow-vars/blob/master/LICENSE)
