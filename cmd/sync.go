@@ -31,6 +31,7 @@ const (
 
 var (
 	yesFlag = "yes"
+	dryFlag = "dry"
 )
 
 type Exists struct{}
@@ -40,6 +41,7 @@ var syncCmd = &cobra.Command{
 	Use:   "sync",
 	Short: "sync your variables files with your airflow cluster",
 	Long:  `sync will read the given file/directory and sync your airflow cluster with the given state.`,
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			cobra.CheckErr(fmt.Errorf("missing input file/directory, enter \".\" to run in the current directory"))
@@ -82,6 +84,13 @@ var syncCmd = &cobra.Command{
 
 		hasChange := internal.PrintDiff(zippedVariables)
 
+		dryRun, err := cmd.Flags().GetBool(dryFlag)
+		cobra.CheckErr(err)
+
+		if dryRun {
+			return
+		}
+
 		if !hasChange {
 			fmt.Print("No changes. Exiting... \n")
 			return
@@ -103,6 +112,7 @@ var syncCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(syncCmd)
 	syncCmd.Flags().BoolP(yesFlag, "y", false, "proceed without confirm changes")
+	syncCmd.Flags().Bool(dryFlag, false, "dry run mode")
 }
 
 func initAirflowCli(cmd *cobra.Command) (context.Context, *airflow.APIClient) {
