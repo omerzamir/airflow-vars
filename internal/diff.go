@@ -18,7 +18,6 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	"github.com/kylelemons/godebug/pretty"
 	"github.com/spf13/cobra"
@@ -34,23 +33,11 @@ func PrintDiff(variables map[string]*VersionedVariable) bool {
 		if variable.Prev != nil {
 			err := json.Unmarshal([]byte(*variable.Prev.Value), &prev)
 			cobra.CheckErr(err)
-
-			if variable.New != nil {
-				if strings.Compare(*variable.Prev.Value, *variable.New.Value) != 0 {
-					change += 1
-				}
-			} else {
-				toDelete += 1
-			}
 		}
 
 		if variable.New != nil {
 			err := json.Unmarshal([]byte(*variable.New.Value), &newVar)
 			cobra.CheckErr(err)
-
-			if variable.Prev == nil {
-				add += 1
-			}
 		}
 
 		diff := pretty.Compare(prev, newVar)
@@ -58,6 +45,16 @@ func PrintDiff(variables map[string]*VersionedVariable) bool {
 			fmt.Printf("Variable: %s \n", key)
 			fmt.Println(diff)
 			fmt.Print("\n")
+		}
+
+		if variable.New != nil && variable.Prev != nil {
+			if diff != "" {
+				change += 1
+			}
+		} else if variable.New == nil && variable.Prev != nil {
+			toDelete += 1
+		} else {
+			add += 1
 		}
 	}
 

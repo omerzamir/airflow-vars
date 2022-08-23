@@ -30,8 +30,9 @@ const (
 )
 
 var (
-	yesFlag = "yes"
-	dryFlag = "dry"
+	yesFlag    = "yes"
+	dryFlag    = "dry"
+	unsafeFlag = "unsafe"
 )
 
 type Exists struct{}
@@ -60,15 +61,25 @@ var syncCmd = &cobra.Command{
 
 		p := make(map[string]any)
 
+		unsafeMode, err := cmd.Flags().GetBool(unsafeFlag)
+		cobra.CheckErr(err)
+
 		for _, file := range files {
 			if file == nil {
 				continue
 			}
 
 			if file.Config.Prefix == "" {
-				p = map[string]any{"": &Exists{}}
+				if unsafeMode {
+					p = map[string]any{"": &Exists{}}
 
-				break
+					break
+				} else {
+					cobra.CheckErr(fmt.Errorf(`a config file without prefix was provided.
+this options is disabled by default for safety reasons.
+if you want to enable empty/undefined prefixes, use the --unsafe flag`))
+				}
+
 			}
 
 			p[file.Config.Prefix] = &Exists{}
@@ -113,6 +124,7 @@ func init() {
 	rootCmd.AddCommand(syncCmd)
 	syncCmd.Flags().BoolP(yesFlag, "y", false, "proceed without confirm changes")
 	syncCmd.Flags().Bool(dryFlag, false, "dry run mode")
+	syncCmd.Flags().Bool(unsafeFlag, false, "unsafe mode, configs without prefix can be provided")
 }
 
 func initAirflowCli(cmd *cobra.Command) (context.Context, *airflow.APIClient) {
