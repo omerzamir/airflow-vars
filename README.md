@@ -10,6 +10,7 @@ There are 2 options in order to install the cli.
 
  1. Install with go.
  2. Install from binary release.
+ 3. Use Docker image
 
 ### Install with go
 Install the airflow vars with the command `go install github.com/omerzamir/airflow-vars@latest`. 
@@ -19,6 +20,9 @@ Go will automatically install it in your `$GOPATH/bin` directory which should be
 1. Download your [desired version](https://github.com/omerzamir/airflow-vars/releases)
 2. Unpack it (tar -zxvf airflow-vars_0.0.1_Linux_arm64.tar.gz)
 3. Find the `airflow-vars` binary in the unpacked directory, and move it to its desired destination (`mv airflow-vars_0.0.1_Linux_arm64/airflow-vars /usr/local/bin/airflow-vars`)
+
+### Docker
+The image is `omerzamir/airflow-vars:0.0.1-alpine`
 
 ## Usage
 At any time, you can view usage instructions by entering `airflow-vars --help`.
