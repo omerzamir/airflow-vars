@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/apache/airflow-client-go/airflow v0.0.0-20220509204651-4f1b26e4a5d0
 	github.com/kylelemons/godebug v1.1.0
-	github.com/spf13/cobra v1.5.0
+	github.com/spf13/cobra v1.6.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.13.0
 	golang.org/x/term v0.0.0-20220526004731-065cf7ba2467
@@ -17,7 +17,7 @@ require (
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
