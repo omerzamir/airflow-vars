@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/apache/airflow-client-go/airflow v0.0.0-20220509204651-4f1b26e4a5d0
 	github.com/kylelemons/godebug v1.1.0
-	github.com/spf13/cobra v1.6.0
+	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.14.0
 	golang.org/x/term v0.0.0-20220526004731-065cf7ba2467
