@@ -17,6 +17,7 @@ package internal
 
 import (
 	"context"
+	"fmt"
 	"math"
 	"strings"
 
@@ -51,12 +52,25 @@ func GetAllVariables(ctx context.Context, cli *airflow.APIClient, prefixes []str
 				}
 			}
 		}
-		scanned += int32(len(toScan))
+
+		toScanLength := len(toScan)
+		if toScanLength > math.MaxInt32 {
+			cobra.CheckErr(fmt.Errorf("toScanLength value exceeds int32 range: %d", toScanLength))
+		}
+
+		// #nosec G115
+		scanned += int32(toScanLength)
 
 		if int64(offset)+fetchChunkSize >= math.MaxInt32 {
 			return data
 		}
 
+		variablesLength := len(*vars.Variables)
+		if variablesLength > math.MaxInt32 {
+			cobra.CheckErr(fmt.Errorf("variablesLength value exceeds int32 range: %d", variablesLength))
+		}
+
+		// #nosec G115
 		offset += int32(len(*vars.Variables))
 	}
 
