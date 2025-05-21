@@ -13,10 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+// Package cmd implements CLI commands for managing and syncing Airflow variables.
 package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/omerzamir/airflow-vars/internal"
@@ -30,22 +33,22 @@ const (
 )
 
 var (
-	yesFlag    = "yes"
-	dryFlag    = "dry"
-	unsafeFlag = "unsafe"
+	yesFlag    = "yes"    //nolint:gochecknoglobals // this is a global variable
+	dryFlag    = "dry"    //nolint:gochecknoglobals // this is a global variable
+	unsafeFlag = "unsafe" //nolint:gochecknoglobals // this is a global variable
 )
 
 type Exists struct{}
 
-// importCmd represents the import command
-var syncCmd = &cobra.Command{
+// importCmd represents the import command.
+var syncCmd = &cobra.Command{ //nolint:gochecknoglobals // this is a global variable
 	Use:   "sync",
 	Short: "sync your variables files with your airflow cluster",
 	Long:  `sync will read the given file/directory and sync your airflow cluster with the given state.`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			cobra.CheckErr(fmt.Errorf("missing input file/directory, enter \".\" to run in the current directory"))
+			cobra.CheckErr(errors.New("missing input file/directory, enter \".\" to run in the current directory"))
 		}
 
 		ctx, cli := initAirflowCli(cmd)
@@ -74,12 +77,10 @@ var syncCmd = &cobra.Command{
 					p = map[string]any{"": &Exists{}}
 
 					break
-				} else {
-					cobra.CheckErr(fmt.Errorf(`a config file without prefix was provided.
+				}
+				cobra.CheckErr(errors.New(`a config file without prefix was provided.
 this options is disabled by default for safety reasons.
 if you want to enable empty/undefined prefixes, use the --unsafe flag`))
-				}
-
 			}
 
 			p[file.Config.Prefix] = &Exists{}
@@ -103,7 +104,7 @@ if you want to enable empty/undefined prefixes, use the --unsafe flag`))
 		}
 
 		if !hasChange {
-			fmt.Print("No changes. Exiting... \n")
+			fmt.Print("No changes. Exiting... \n") //nolint:forbidigo // this is a user prompt
 			return
 		}
 
@@ -111,12 +112,12 @@ if you want to enable empty/undefined prefixes, use the --unsafe flag`))
 		cobra.CheckErr(err)
 
 		if !approved && !internal.YesNoPrompt("Approve plan?", false) {
-			fmt.Print("Plan not approved. Exiting... \n")
+			fmt.Print("Plan not approved. Exiting... \n") //nolint:forbidigo // this is a user prompt
 			return
 		}
-		fmt.Print("Approved, executing plan... \n")
+		fmt.Print("Approved, executing plan... \n") //nolint:forbidigo // this is a user prompt
 		internal.ApplyChanges(ctx, cli, zippedVariables)
-		fmt.Print("Done. \n")
+		fmt.Print("Done. \n") //nolint:forbidigo // this is a user prompt
 	},
 }
 

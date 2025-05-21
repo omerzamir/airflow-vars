@@ -13,6 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+// Package internal provides functions for interacting with Apache Airflow variables via the API client.
 package internal
 
 import (
@@ -44,8 +46,8 @@ func GetAllVariables(ctx context.Context, cli *airflow.APIClient, prefixes []str
 		for _, v := range toScan {
 			for _, prefix := range prefixes {
 				if strings.HasPrefix(*v.Key, prefix) {
-					variable, _, err := cli.VariableApi.GetVariable(ctx, *v.Key).Execute()
-					cobra.CheckErr(err)
+					variable, _, getErr := cli.VariableApi.GetVariable(ctx, *v.Key).Execute()
+					cobra.CheckErr(getErr)
 
 					data = append(data, &variable)
 					break
@@ -79,15 +81,16 @@ func GetAllVariables(ctx context.Context, cli *airflow.APIClient, prefixes []str
 
 func ApplyChanges(ctx context.Context, cli *airflow.APIClient, variables map[string]*VersionedVariable) {
 	for _, variable := range variables {
-		if variable.Prev != nil && variable.New != nil {
+		switch {
+		case variable.Prev != nil && variable.New != nil:
 			if strings.Compare(*variable.Prev.Value, *variable.New.Value) != 0 {
 				_, _, err := cli.VariableApi.PatchVariable(ctx, *variable.New.Key).Variable(*variable.New).Execute()
 				cobra.CheckErr(err)
 			}
-		} else if variable.New != nil {
+		case variable.New != nil:
 			_, _, err := cli.VariableApi.PostVariables(ctx).Variable(*variable.New).Execute()
 			cobra.CheckErr(err)
-		} else {
+		default:
 			_, err := cli.VariableApi.DeleteVariable(ctx, *variable.Prev.Key).Execute()
 			cobra.CheckErr(err)
 		}

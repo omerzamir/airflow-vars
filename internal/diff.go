@@ -13,6 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+// Package internal provides utilities for variable diffing and change reporting.
 package internal
 
 import (
@@ -27,8 +29,8 @@ func PrintDiff(variables map[string]*VersionedVariable) bool {
 	add, change, toDelete := 0, 0, 0
 
 	for key, variable := range variables {
-		var prev any = nil
-		var newVar any = nil
+		var prev any
+		var newVar any
 
 		if variable.Prev != nil {
 			err := json.Unmarshal([]byte(*variable.Prev.Value), &prev)
@@ -42,23 +44,24 @@ func PrintDiff(variables map[string]*VersionedVariable) bool {
 
 		diff := pretty.Compare(prev, newVar)
 		if diff != "" {
-			fmt.Printf("Variable: %s \n", key)
-			fmt.Println(diff)
-			fmt.Print("\n")
+			fmt.Printf("Variable: %s \n", key) //nolint:forbidigo // this is a user prompt
+			fmt.Println(diff)                  //nolint:forbidigo // this is a user prompt
+			fmt.Print("\n")                    //nolint:forbidigo // this is a user prompt
 		}
 
-		if variable.New != nil && variable.Prev != nil {
+		switch {
+		case variable.New != nil && variable.Prev != nil:
 			if diff != "" {
-				change += 1
+				change++
 			}
-		} else if variable.New == nil && variable.Prev != nil {
-			toDelete += 1
-		} else {
-			add += 1
+		case variable.New == nil && variable.Prev != nil:
+			toDelete++
+		default:
+			add++
 		}
 	}
 
-	fmt.Printf("Plan: Add %d, Update %d, Delete %d \n", add, change, toDelete)
+	fmt.Printf("Plan: Add %d, Update %d, Delete %d \n", add, change, toDelete) //nolint:forbidigo,golines // this is a user prompt
 
 	return add > 0 || change > 0 || toDelete > 0
 }

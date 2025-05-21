@@ -13,6 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+// Package cmd implements the root command and configuration for the airflow-vars CLI.
 package cmd
 
 import (
@@ -36,28 +38,28 @@ const (
 )
 
 var (
-	cfgFile  string
-	username string
-	password string
+	cfgFile  string //nolint:gochecknoglobals // this is a global variable
+	username string //nolint:gochecknoglobals // this is a global variable
+	password string //nolint:gochecknoglobals // this is a global variable
 )
 
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
+// rootCmd represents the base command when called without any subcommands.
+var rootCmd = &cobra.Command{ //nolint:gochecknoglobals // this is a global variable
 	Use:   "airflow-vars",
 	Short: "gitops tool for airflow variable deplyment",
 	Long: `
 airflow vars is a cli intends to help you throughout your airflow deployment process.
 It'll help you manage your airflow variables with yaml files and deploy all of your variables directly to airflow.
 	`,
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+	PersistentPreRun: func(cmd *cobra.Command, _ []string) {
 		promptPassword, err := cmd.Flags().GetBool(promptPasswordFlag)
 		cobra.CheckErr(err)
 
 		if promptPassword {
-			fmt.Print("Please insert your password: \n")
-			bytesPassword, err := term.ReadPassword(int(os.Stdin.Fd()))
-			if err != nil {
-				cobra.CheckErr(fmt.Errorf("error getting password from prompt: %s", err))
+			fmt.Print("Please insert your password: \n") //nolint:forbidigo // this is a user prompt
+			bytesPassword, passErr := term.ReadPassword(int(os.Stdin.Fd()))
+			if passErr != nil {
+				cobra.CheckErr(fmt.Errorf("error getting password from prompt: %w", passErr))
 			}
 
 			password = string(bytesPassword)

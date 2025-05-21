@@ -13,6 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+// Package internal provides utility functions for input file handling and variable processing.
 package internal
 
 import (
@@ -33,9 +35,9 @@ const (
 
 type InputFile struct {
 	Config struct {
-		Prefix string
-	}
-	Vars map[string]any
+		Prefix string `yaml:"prefix"`
+	} `yaml:"config"`
+	Vars map[string]any `yaml:"vars"`
 }
 
 type VersionedVariable struct {
@@ -61,10 +63,10 @@ func ReadInputFiles(inPath string) ([]*InputFile, error) {
 			}
 
 			if strings.HasSuffix(info.Name(), "yml") || strings.HasSuffix(info.Name(), "yaml") {
-				f, err := readFile(path)
-				if err != nil {
-					cobra.CheckErr(err)
-					return err
+				f, readErr := readFile(path)
+				if readErr != nil {
+					cobra.CheckErr(readErr)
+					return readErr
 				}
 				vars := make(map[string]any)
 				for k, v := range f.Vars {
