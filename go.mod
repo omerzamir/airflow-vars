@@ -12,7 +12,7 @@ require (
 	github.com/spf13/viper v1.20.1
 	golang.org/x/term v0.33.0
 	gopkg.in/yaml.v3 v3.0.1
-	sigs.k8s.io/yaml v1.5.0
+	sigs.k8s.io/yaml v1.6.0
 )
 
 require (
