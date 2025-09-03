@@ -8,7 +8,7 @@ require (
 	github.com/apache/airflow-client-go/airflow v0.0.0-20230210234754-8ce0b39cfbb2
 	github.com/kylelemons/godebug v1.1.0
 	github.com/spf13/cobra v1.9.1
-	github.com/spf13/pflag v1.0.7
+	github.com/spf13/pflag v1.0.10
 	github.com/spf13/viper v1.20.1
 	golang.org/x/term v0.34.0
 	gopkg.in/yaml.v3 v3.0.1
